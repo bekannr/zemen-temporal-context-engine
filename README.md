@@ -66,18 +66,18 @@ When the evidence is weak, it says so and escalates instead of sounding sure.
 ## 🔄 How it works: the pipeline
 
 ```mermaid
-flowchart LR
-    A["Findings from OpenSearch"] --> B["stats: daily counts per detector"]
-    B --> C["90-day baseline and spike threshold"]
-    C --> D["Spike days"]
-    D --> E["Candidate signals: calendar, custom, learned"]
-    E --> F["Confidence score per candidate"]
-    F --> G{"Rejected? drop effect or low confidence"}
-    G -- "best surviving match" --> H["expected_local_pattern or expected_org_pattern"]
-    G -- "nothing survives" --> I["unexplained_escalate"]
-    H --> J["Reasoning chain saved to finding-context"]
+flowchart TD
+    A[Findings from OpenSearch] --> B[Daily counts per detector]
+    B --> C[90-day baseline and spike threshold]
+    C --> D[Spike days]
+    D --> E[Candidate signals]
+    E --> F[Confidence score per candidate]
+    F --> G{Any candidate survives?}
+    G -->|Yes, best match| H[Expected pattern label]
+    G -->|No| I[Unexplained, escalate]
+    H --> J[Reasoning chain saved]
     I --> J
-    J --> K["Analyst confirm / override"]
+    J --> K[Analyst confirm or override]
     K --> F
 ```
 
